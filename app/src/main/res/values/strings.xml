@@ -12,4 +12,13 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="drawer_menu_photos">Photos</string>
     <string name="drawer_menu_map">Map</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="enter_your_login">Enter your login</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="repeat_your_password">Repeat your password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="log_in">Log in</string>
+    <string name="create_log_in">Create log in</string>
+    <string name="create_password">Create password</string>
 </resources>
