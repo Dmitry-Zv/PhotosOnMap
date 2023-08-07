@@ -21,4 +21,8 @@
     <string name="log_in">Log in</string>
     <string name="create_log_in">Create log in</string>
     <string name="create_password">Create password</string>
+    <string name="positive_button">Ok</string>
+    <string name="negative_button">No</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="message_delete_photo">Delete photo?</string>
 </resources>

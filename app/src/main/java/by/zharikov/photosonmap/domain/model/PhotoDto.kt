@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 
 data class PhotoDto(
     @SerializedName("data")
-    val data: Data = Data(),
+    val data: List<Data> = listOf(),
     @SerializedName("status")
     val status: Int = 0
 ) {
     data class Data(
         @SerializedName("date")
-        val date: Int = 0,
+        val date: Long = 0,
         @SerializedName("id")
         val id: Int = 0,
         @SerializedName("lat")

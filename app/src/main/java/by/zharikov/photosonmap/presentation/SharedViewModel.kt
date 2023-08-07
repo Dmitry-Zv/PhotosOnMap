@@ -5,20 +5,23 @@ import androidx.lifecycle.viewModelScope
 import by.zharikov.photosonmap.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class SharedViewModel : ViewModel() {
+class SharedViewModel @Inject constructor() : ViewModel() {
 
-    private val _data = MutableSharedFlow<User.Data>()
-    val data = _data.asSharedFlow()
+    private val _userState = MutableStateFlow("")
+    val userState = _userState.asStateFlow()
 
 
-    fun setData(data: User.Data) {
+    fun setUser(token: String) {
         viewModelScope.launch {
-            _data.emit(data)
-
+            _userState.emit(token)
         }
     }
+
 }

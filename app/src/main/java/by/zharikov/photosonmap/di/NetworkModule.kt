@@ -2,9 +2,13 @@ package by.zharikov.photosonmap.di
 
 import by.zharikov.photosonmap.data.network.PhotosApi
 import by.zharikov.photosonmap.domain.repository.AuthenticationRepository
+import by.zharikov.photosonmap.domain.repository.PhotosRepository
 import by.zharikov.photosonmap.domain.usecase.authentication.AuthenticationUseCases
 import by.zharikov.photosonmap.domain.usecase.authentication.SignIn
 import by.zharikov.photosonmap.domain.usecase.authentication.SignUp
+import by.zharikov.photosonmap.domain.usecase.photos.DeletePhoto
+import by.zharikov.photosonmap.domain.usecase.photos.GetPhotos
+import by.zharikov.photosonmap.domain.usecase.photos.PhotosUseCases
 import by.zharikov.photosonmap.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -51,9 +55,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticationUseCases(repository: AuthenticationRepository):AuthenticationUseCases =
+    fun provideAuthenticationUseCases(repository: AuthenticationRepository): AuthenticationUseCases =
         AuthenticationUseCases(
             signIn = SignIn(repository),
             signUp = SignUp(repository)
+        )
+
+    @Provides
+    @Singleton
+    fun providePhotosUseCases(repository: PhotosRepository): PhotosUseCases =
+        PhotosUseCases(
+            getPhotos = GetPhotos(repository),
+            deletePhoto = DeletePhoto(repository = repository)
         )
 }
