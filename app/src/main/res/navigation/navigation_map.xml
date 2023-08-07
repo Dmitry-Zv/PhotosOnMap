@@ -11,6 +11,7 @@
         <action
             android:id="@+id/action_mapFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
