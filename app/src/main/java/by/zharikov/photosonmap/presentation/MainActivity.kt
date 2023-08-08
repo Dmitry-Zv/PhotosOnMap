@@ -63,9 +63,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            //TODO
-        }
     }
 
 

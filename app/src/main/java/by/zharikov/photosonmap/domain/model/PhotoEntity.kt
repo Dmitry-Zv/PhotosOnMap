@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import by.zharikov.photosonmap.utils.Constants
-import com.google.gson.annotations.SerializedName
 
 
 @Entity(tableName = Constants.PHOTO_TABLE)

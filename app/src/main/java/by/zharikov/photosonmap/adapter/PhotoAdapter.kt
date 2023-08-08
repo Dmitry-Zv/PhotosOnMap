@@ -6,12 +6,15 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import by.zharikov.photosonmap.databinding.ItemPhotoBinding
-import by.zharikov.photosonmap.domain.model.PhotoDto
 import by.zharikov.photosonmap.domain.model.PhotoUi
 import by.zharikov.photosonmap.presentation.photos.DeletePhotoListener
+import by.zharikov.photosonmap.presentation.photos.PhotoClickListener
 import com.bumptech.glide.Glide
 
-class PhotoAdapter(private val deletePhotoListener: DeletePhotoListener) :
+class PhotoAdapter(
+    private val deletePhotoListener: DeletePhotoListener,
+    private val photoClickListener: PhotoClickListener
+) :
     PagingDataAdapter<PhotoUi, PhotoAdapter.PhotoViewHolder>(PhotosDiffCallback()) {
 
     inner class PhotoViewHolder(private val binding: ItemPhotoBinding) :
@@ -21,6 +24,9 @@ class PhotoAdapter(private val deletePhotoListener: DeletePhotoListener) :
                 root.setOnLongClickListener {
                     deletePhotoListener.onDeletePhotoLongClickListener(photoId = photo.id)
                     true
+                }
+                root.setOnClickListener {
+                    photoClickListener.onPhotoClickListener(photo = photo)
                 }
                 Glide.with(root).load(photo.url).into(photoView)
                 dataView.text = photo.date

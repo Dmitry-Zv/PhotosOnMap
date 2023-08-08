@@ -7,7 +7,6 @@ import by.zharikov.photosonmap.domain.repository.AuthenticationRepository
 import by.zharikov.photosonmap.utils.Resource
 import retrofit2.HttpException
 import javax.inject.Inject
-import kotlin.math.log
 
 class AuthenticationRepositoryImpl @Inject constructor(
     private val photosApi: PhotosApi

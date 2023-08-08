@@ -1,7 +1,6 @@
 package by.zharikov.photosonmap.domain.usecase.photos
 
 import androidx.paging.PagingData
-import by.zharikov.photosonmap.domain.model.PhotoDto
 import by.zharikov.photosonmap.domain.model.PhotoUi
 import by.zharikov.photosonmap.domain.repository.PhotosRepository
 import kotlinx.coroutines.flow.Flow
