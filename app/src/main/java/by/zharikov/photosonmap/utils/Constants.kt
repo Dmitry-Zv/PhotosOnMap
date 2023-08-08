@@ -8,5 +8,6 @@ object Constants {
     const val PHOTO_REMOTE_KEYS_TABLE = "photo_remote_keys_table"
     const val PHOTO_DATABASE = "photo_database"
     const val PAGE_SIZE = 20
-    const val USER_DATA = "userData"
+    const val PHOTO_ARG = "photoArg"
+    const val COMMENT_TABLE = "comment_table"
 }

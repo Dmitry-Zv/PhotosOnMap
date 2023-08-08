@@ -11,7 +11,7 @@
         android:label="fragment_photos"
         tools:layout="@layout/fragment_photos" >
         <action
-            android:id="@+id/action_photosFragment_to_detailFragment2"
+            android:id="@+id/action_photosFragment_to_detailFragment"
             app:destination="@id/detailFragment2" />
 
 
@@ -19,5 +19,9 @@
     <fragment
         android:id="@+id/detailFragment2"
         android:name="by.zharikov.photosonmap.presentation.detail.DetailFragment"
-        android:label="DetailFragment" />
+        android:label="DetailFragment" >
+        <argument
+            android:name="photoArg"
+            app:argType="by.zharikov.photosonmap.domain.model.PhotoUi" />
+    </fragment>
 </navigation>

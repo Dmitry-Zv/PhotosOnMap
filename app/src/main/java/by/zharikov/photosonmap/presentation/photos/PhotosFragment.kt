@@ -5,25 +5,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import by.zharikov.photosonmap.R
 import by.zharikov.photosonmap.adapter.PhotoAdapter
 import by.zharikov.photosonmap.databinding.FragmentPhotosBinding
-import by.zharikov.photosonmap.domain.model.User
+import by.zharikov.photosonmap.domain.model.PhotoUi
 import by.zharikov.photosonmap.presentation.SharedViewModel
+import by.zharikov.photosonmap.utils.Constants.PHOTO_ARG
 import by.zharikov.photosonmap.utils.collectLatestLifecycleFlow
 import by.zharikov.photosonmap.utils.showAlert
 import by.zharikov.photosonmap.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.flatMapLatest
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class PhotosFragment : Fragment(), DeletePhotoListener {
+class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
 
     private var _binding: FragmentPhotosBinding? = null
     private val binding get() = _binding!!
@@ -80,7 +80,7 @@ class PhotosFragment : Fragment(), DeletePhotoListener {
 
     private fun setupAdapter() {
 
-        adapter = PhotoAdapter(this)
+        adapter = PhotoAdapter(this, this)
         binding.recyclerPhotos.adapter = adapter
         binding.recyclerPhotos.layoutManager = GridLayoutManager(requireContext(), 2)
     }
@@ -101,5 +101,10 @@ class PhotosFragment : Fragment(), DeletePhotoListener {
             })
 
 
+    }
+
+    override fun onPhotoClickListener(photo: PhotoUi) {
+        val bundle = bundleOf(PHOTO_ARG to photo)
+        view?.findNavController()?.navigate(R.id.action_photosFragment_to_detailFragment, bundle)
     }
 }

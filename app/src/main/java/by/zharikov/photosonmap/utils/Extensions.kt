@@ -52,8 +52,17 @@ fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) 
 }
 
 fun Long.formatToData(timestamp: Long): String =
-    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(timestamp)
+    SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(timestamp * 1000)
 
+
+fun Fragment.showSnackBarWithAction(msg: String, view: View, onClick:()->Unit) {
+    Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).apply {
+        setAction("Undo"){
+            onClick()
+        }
+    }
+        .show()
+}
 
 fun Fragment.showSnackBar(msg: String, view: View) {
     Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)

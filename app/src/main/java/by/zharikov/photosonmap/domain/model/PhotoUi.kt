@@ -1,18 +1,19 @@
 package by.zharikov.photosonmap.domain.model
 
 
+import android.os.Parcelable
 import by.zharikov.photosonmap.utils.formatToData
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class PhotoUi(
     val date: String,
     val id: Int,
     val lat: Double,
     val lng: Double,
     val url: String = ""
-){
-    companion object{
+) : Parcelable {
+    companion object {
         fun toPhotoUi(photoEntity: PhotoEntity) =
             PhotoUi(
                 date = photoEntity.date.formatToData(photoEntity.date),

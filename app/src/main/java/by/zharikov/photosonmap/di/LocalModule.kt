@@ -3,6 +3,7 @@ package by.zharikov.photosonmap.di
 import android.content.Context
 import androidx.room.Room
 import by.zharikov.photosonmap.data.local.PhotosDatabase
+import by.zharikov.photosonmap.data.local.dao.CommentDao
 import by.zharikov.photosonmap.data.local.dao.PhotoDao
 import by.zharikov.photosonmap.utils.Constants.PHOTO_DATABASE
 import dagger.Module
@@ -32,4 +33,9 @@ object LocalModule {
     @Singleton
     fun providePhotoDao(database: PhotosDatabase): PhotoDao =
         database.getPhotoDao()
+
+    @Provides
+    @Singleton
+    fun provideCommentDao(database: PhotosDatabase): CommentDao =
+        database.getCommentDao()
 }
