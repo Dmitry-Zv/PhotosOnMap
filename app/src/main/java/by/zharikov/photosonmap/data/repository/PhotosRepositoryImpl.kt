@@ -6,8 +6,7 @@ import by.zharikov.photosonmap.data.local.dao.CommentDao
 import by.zharikov.photosonmap.data.local.dao.PhotoDao
 import by.zharikov.photosonmap.data.network.PhotosApi
 import by.zharikov.photosonmap.data.paging.PhotosRemoteMediator
-import by.zharikov.photosonmap.domain.model.DeleteStatusDto
-import by.zharikov.photosonmap.domain.model.PhotoUi
+import by.zharikov.photosonmap.domain.model.*
 import by.zharikov.photosonmap.domain.repository.PhotosRepository
 import by.zharikov.photosonmap.utils.Constants.ACCESS_TOKEN
 import by.zharikov.photosonmap.utils.Constants.PAGE_SIZE
@@ -73,6 +72,25 @@ class PhotosRepositoryImpl @Inject constructor(
                 throw Exception("Trouble deleting comments")
             }
 
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
+    }
+
+    override suspend fun uploadPhoto(token: String, postPhoto: PostPhoto): Resource<PhotoDto> {
+        return try {
+            val response =
+                photosApi.uploadPhoto(headers = mapOf(ACCESS_TOKEN to token), postPhoto = postPhoto)
+
+            if (response.isSuccessful) {
+                val photoDto = checkNotNull(response.body())
+                val photoEntity = PhotoEntity.toPhotoEntity(data = photoDto.data)
+                photoDao.addPhoto(photoEntity = photoEntity)
+                Resource.Success(photoDto)
+
+            } else {
+                Resource.Error(HttpException(response))
+            }
         } catch (e: Exception) {
             Resource.Error(e)
         }

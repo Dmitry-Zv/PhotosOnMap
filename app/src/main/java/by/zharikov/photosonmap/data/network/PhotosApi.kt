@@ -31,7 +31,7 @@ interface PhotosApi {
     suspend fun getPhotos(
         @HeaderMap headers: Map<String, String>,
         @Query("page") page: Int
-    ): Response<PhotoDto>
+    ): Response<PhotoListDto>
 
 
     @DELETE("/api/image/{id}")

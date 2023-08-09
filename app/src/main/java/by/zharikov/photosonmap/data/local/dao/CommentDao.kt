@@ -16,8 +16,8 @@ interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addComment(comment: CommentEntity)
 
-    @Query("SELECT * FROM comment_table ORDER BY date_time DESC")
-    fun getAllComments(): PagingSource<Int, CommentEntity>
+    @Query("SELECT * FROM comment_table WHERE photo_id = :photoId ORDER BY date_time DESC")
+    fun getAllComments(photoId: Int): PagingSource<Int, CommentEntity>
 
     @Query("SELECT * FROM comment_table WHERE photo_id = :photoId")
     suspend fun getAllCommentsByPhotoId(photoId:Int): List<CommentEntity>

@@ -25,4 +25,5 @@
     <string name="negative_button">No</string>
     <string name="delete_photo">Delete photo</string>
     <string name="message_delete_photo">Delete photo?</string>
+    <string name="take_photo">Take Photo</string>
 </resources>

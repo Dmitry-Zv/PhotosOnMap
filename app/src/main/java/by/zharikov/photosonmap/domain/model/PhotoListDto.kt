@@ -1,10 +1,11 @@
 package by.zharikov.photosonmap.domain.model
 
+
 import com.google.gson.annotations.SerializedName
 
-data class PhotoDto(
+data class PhotoListDto(
     @SerializedName("data")
-    val data: Photo = Photo(),
+    val data: List<Photo> = listOf(),
     @SerializedName("status")
     val status: Int = 0
 )

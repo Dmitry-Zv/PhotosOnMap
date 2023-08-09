@@ -13,6 +13,7 @@ import by.zharikov.photosonmap.domain.usecase.comment.UploadComment
 import by.zharikov.photosonmap.domain.usecase.photos.DeletePhoto
 import by.zharikov.photosonmap.domain.usecase.photos.GetPhotos
 import by.zharikov.photosonmap.domain.usecase.photos.PhotosUseCases
+import by.zharikov.photosonmap.domain.usecase.photos.UploadPhoto
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +37,8 @@ object UseCaseModule {
     fun providePhotosUseCases(repository: PhotosRepository): PhotosUseCases =
         PhotosUseCases(
             getPhotos = GetPhotos(repository),
-            deletePhoto = DeletePhoto(repository = repository)
+            deletePhoto = DeletePhoto(repository),
+            uploadPhoto = UploadPhoto(repository)
         )
 
     @Provides
