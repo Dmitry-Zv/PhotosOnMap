@@ -39,6 +39,14 @@ class DetailFragment : Fragment() {
     private lateinit var adapter: CommentAdapter
     private var inputMethodManager: InputMethodManager? = null
 
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            super.onItemRangeInserted(positionStart, itemCount)
+            binding.recyclerComments.scrollToPosition(0)
+        }
+
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         inputMethodManager = getSystemService(requireContext(), InputMethodManager::class.java)
@@ -72,6 +80,7 @@ class DetailFragment : Fragment() {
     private fun collectComments() {
         collectLatestLifecycleFlow(viewModel.commentFlow) {
             adapter.submitData(it)
+            binding.recyclerComments.scrollToPosition(0)
         }
     }
 
@@ -154,6 +163,15 @@ class DetailFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        adapter.registerAdapterDataObserver(observer)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.unregisterAdapterDataObserver(observer)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

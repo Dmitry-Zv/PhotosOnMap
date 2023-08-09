@@ -1,6 +1,7 @@
 package by.zharikov.photosonmap.presentation.photos
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.zharikov.photosonmap.R
 import by.zharikov.photosonmap.adapter.PhotoAdapter
 import by.zharikov.photosonmap.databinding.FragmentPhotosBinding
@@ -30,6 +32,19 @@ class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
     private val viewModel: PhotosViewModel by viewModels()
     private lateinit var adapter: PhotoAdapter
 
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            super.onItemRangeInserted(positionStart, itemCount)
+            binding.recyclerPhotos.scrollToPosition(0)
+        }
+
+    }
+
+
+    companion object {
+        const val TAG = "LIFECYCLE_PHOTO"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,13 +57,11 @@ class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupAdapter()
         collectToken()
         collectPagingData()
         collectDeleteState()
         takePhoto()
-
 
     }
 
@@ -72,7 +85,9 @@ class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
 
     private fun collectPagingData() {
         collectLatestLifecycleFlow(viewModel.photosFlow) { pagingData ->
+            Log.d(TAG, "SubmitData")
             adapter.submitData(pagingData)
+
         }
     }
 
@@ -87,7 +102,18 @@ class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
 
         adapter = PhotoAdapter(this, this)
         binding.recyclerPhotos.adapter = adapter
-        binding.recyclerPhotos.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerPhotos.layoutManager = GridLayoutManager(requireContext(), 3)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        adapter.registerAdapterDataObserver(observer)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.unregisterAdapterDataObserver(observer)
     }
 
     override fun onDestroyView() {

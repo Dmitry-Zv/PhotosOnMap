@@ -1,11 +1,15 @@
 package by.zharikov.photosonmap.utils
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.View
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,10 +25,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-
 fun Fragment.showAlert(
     title: Int,
-    message:Int,
+    message: Int,
     positiveButtonResId: Int = R.string.positive_button,
     negativeButtonResId: Int = R.string.negative_button,
     positiveButtonFun: () -> Unit,
@@ -49,7 +52,6 @@ fun Fragment.showAlert(
 }
 
 
-
 fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -62,14 +64,12 @@ fun Long.formatToData(timestamp: Long): String =
     SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(timestamp * 1000)
 
 
-
-
 fun Fragment.showSnackBar(msg: String, view: View) {
     Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
         .show()
 }
 
-fun ImageCapture.OnImageCapturedCallback.imageProxyToBitmap(image:ImageProxy):Bitmap{
+fun ImageCapture.OnImageCapturedCallback.imageProxyToBitmap(image: ImageProxy): Bitmap {
     val buffer = image.planes[0].buffer
     val bytes = ByteArray(buffer.remaining())
     buffer.get(bytes)
@@ -82,4 +82,15 @@ fun ImageCapture.OnImageCapturedCallback.bitmapToBase64(bitmap: Bitmap): String 
     val b = outputStream.toByteArray()
     return Base64.encodeToString(b, Base64.DEFAULT)
 }
+
+fun Context.hasLocationPermission(): Boolean =
+    ContextCompat.checkSelfPermission(
+        this, Manifest.permission.ACCESS_COARSE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+
 

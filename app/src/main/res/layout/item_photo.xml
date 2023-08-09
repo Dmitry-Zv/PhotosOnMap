@@ -35,6 +35,6 @@
             android:maxLines="1"
             android:padding="4dp"
             android:singleLine="true"
-            android:textSize="20sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
