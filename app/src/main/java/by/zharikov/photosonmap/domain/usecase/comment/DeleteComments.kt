@@ -8,6 +8,10 @@ import javax.inject.Inject
 class DeleteComments @Inject constructor(
     private val repository: CommentRepository
 ) {
-    suspend operator fun invoke(token:String, imageId:Int, commentId:Int):Resource<DeleteStatusDto> =
+    suspend operator fun invoke(
+        token: String,
+        imageId: Int,
+        commentId: Int
+    ): Resource<DeleteStatusDto> =
         repository.deleteComment(token, imageId, commentId)
 }

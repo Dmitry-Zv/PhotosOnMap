@@ -15,7 +15,6 @@ class AuthorizationActivity : AppCompatActivity(), SignUpClickListener {
     private val binding get() = _binding!!
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityAuthorizationBinding.inflate(layoutInflater)
@@ -44,18 +43,6 @@ class AuthorizationActivity : AppCompatActivity(), SignUpClickListener {
         binding.viewPager.adapter = adapter
 
     }
-
-//    override fun onBackPressed() {
-//        val viewPager = binding.pager
-//        if (viewPager.currentItem == 0) {
-//            // If the user is currently looking at the first step, allow the system to handle the
-//            // Back button. This calls finish() on this activity and pops the back stack.
-//            super.onBackPressed()
-//        } else {
-//            // Otherwise, select the previous step.
-//            viewPager.currentItem = viewPager.currentItem - 1
-//        }
-//    }
 
 
     override fun onDestroy() {

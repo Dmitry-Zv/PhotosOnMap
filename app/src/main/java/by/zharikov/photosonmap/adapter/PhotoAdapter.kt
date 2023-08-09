@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import by.zharikov.photosonmap.R
 import by.zharikov.photosonmap.databinding.ItemPhotoBinding
 import by.zharikov.photosonmap.domain.model.PhotoUi
 import by.zharikov.photosonmap.presentation.photos.DeletePhotoListener
@@ -28,7 +29,9 @@ class PhotoAdapter(
                 root.setOnClickListener {
                     photoClickListener.onPhotoClickListener(photo = photo)
                 }
-                Glide.with(root).load(photo.url).into(photoView)
+                Glide.with(root).load(photo.url)
+                    .error(R.drawable.ic_no_image)
+                    .into(photoView)
                 dataView.text = photo.date
             }
 

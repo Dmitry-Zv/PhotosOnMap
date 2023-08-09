@@ -20,14 +20,13 @@ interface CommentDao {
     fun getAllComments(photoId: Int): PagingSource<Int, CommentEntity>
 
     @Query("SELECT * FROM comment_table WHERE photo_id = :photoId")
-    suspend fun getAllCommentsByPhotoId(photoId:Int): List<CommentEntity>
+    suspend fun getAllCommentsByPhotoId(photoId: Int): List<CommentEntity>
 
     @Query("DELETE FROM comment_table WHERE photo_id = :photoId")
     suspend fun deleteAllComments(photoId: Int)
 
     @Query("DELETE FROM comment_table WHERE comment_id = :commentId")
-    suspend fun deleteCommentById(commentId:Int)
-
+    suspend fun deleteCommentById(commentId: Int)
 
 
 }

@@ -3,24 +3,21 @@ package by.zharikov.photosonmap.presentation.camera
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Base64.encodeToString
-import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
-import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import by.zharikov.photosonmap.R
 import by.zharikov.photosonmap.databinding.FragmentCameraBinding
 import by.zharikov.photosonmap.presentation.SharedViewModel
 import by.zharikov.photosonmap.utils.bitmapToBase64
@@ -30,8 +27,6 @@ import by.zharikov.photosonmap.utils.showSnackBar
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.ByteArrayOutputStream
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -41,7 +36,6 @@ class CameraFragment : Fragment() {
 
     companion object {
 
-        private const val TAG = "CameraX"
         private val PERMISSION = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -102,7 +96,8 @@ class CameraFragment : Fragment() {
         } else {
             requestAllPermissions()
         }
-
+        val clickAnimation =
+            AnimationUtils.loadAnimation(requireContext(), R.anim.button_photo_animation)
         collectLatestLifecycleFlow(sharedViewModel.userState) { token ->
             viewModel.onEvent(event = CameraEvent.SetToken(token = token))
         }
@@ -111,6 +106,7 @@ class CameraFragment : Fragment() {
         collectState()
 
         binding.imageCaptureButton.setOnClickListener {
+            it.startAnimation(clickAnimation)
             takePhoto()
         }
 
@@ -156,10 +152,7 @@ class CameraFragment : Fragment() {
                                     currentTime = currentTime
                                 )
                             )
-                            Log.d(TAG, "LAT: $latitude, lon: $longitude")
                         }
-                        Log.d(TAG, bitmap.toString())
-                        Log.d(TAG, base64)
                         image.close()
                     }
 
@@ -203,7 +196,7 @@ class CameraFragment : Fragment() {
                     imageCapture
                 )
             } catch (e: Exception) {
-                Log.e(TAG, e.message ?: "Unknown message")
+                viewModel.onEvent(event = CameraEvent.ShowError(exception = e))
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))

@@ -2,7 +2,6 @@ package by.zharikov.photosonmap.presentation
 
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -38,14 +37,24 @@ class MainActivity : AppCompatActivity() {
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setSupportActionBar(binding.appBarMain.toolbar)
 
+        setUpUi(data)
 
+
+
+        data?.let {
+            sharedViewModel.setUser(it.token)
+        }
+
+
+    }
+
+    private fun setUpUi(user: User.Data?) {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navHeaderMainBinding = NavHeaderMainBinding.inflate(layoutInflater)
-        navHeaderMainBinding.textView.text = data?.login
+        navHeaderMainBinding.textView.text = user?.login
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         navView.addHeaderView(navHeaderMainBinding.root)
@@ -57,11 +66,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         navView.setupWithNavController(navController)
-        data?.let {
-            sharedViewModel.setUser(it.token)
-        }
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id in arrayOf(R.id.detailFragment, R.id.cameraFragment)) {
@@ -70,8 +76,6 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
         }
-
-
     }
 
 

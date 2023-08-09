@@ -60,7 +60,7 @@ class PhotosViewModel @Inject constructor(
         }
     }
 
-    private fun performDefault(){
+    private fun performDefault() {
         _state.value = DeletePhotoState.default
     }
 

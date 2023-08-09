@@ -1,7 +1,6 @@
 package by.zharikov.photosonmap.domain.model
 
 
-import by.zharikov.photosonmap.domain.model.Comment
 import com.google.gson.annotations.SerializedName
 
 data class CommentDto(

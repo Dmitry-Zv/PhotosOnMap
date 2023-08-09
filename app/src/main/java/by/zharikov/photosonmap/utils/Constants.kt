@@ -5,7 +5,6 @@ object Constants {
     const val DATA_KEY = "data_key"
     const val ACCESS_TOKEN = "Access-Token"
     const val PHOTO_TABLE = "photo_table"
-    const val PHOTO_REMOTE_KEYS_TABLE = "photo_remote_keys_table"
     const val PHOTO_DATABASE = "photo_database"
     const val PAGE_SIZE = 20
     const val PHOTO_ARG = "photoArg"

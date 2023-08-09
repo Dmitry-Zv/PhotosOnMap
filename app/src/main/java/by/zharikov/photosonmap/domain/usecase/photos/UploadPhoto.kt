@@ -26,7 +26,7 @@ class UploadPhoto @Inject constructor(
                 lng = longitude
             )
             return repository.uploadPhoto(token = token, postPhoto = postPhoto)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Resource.Error(e)
         }
 
