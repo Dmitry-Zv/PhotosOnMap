@@ -16,9 +16,9 @@ import retrofit2.HttpException
 class CommentRemoteMediator(
     private val photosApi: PhotosApi,
     private val database: PhotosDatabase,
-    private val token:String,
+    private val token: String,
     private val imageId: Int
-):RemoteMediator<Int, CommentEntity>() {
+) : RemoteMediator<Int, CommentEntity>() {
 
     private val commentDao = database.getCommentDao()
     private var pageIndex = 0
@@ -27,9 +27,9 @@ class CommentRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, CommentEntity>
     ): MediatorResult {
-        pageIndex = getPageIndex(loadType) ?:
-                return MediatorResult.Success(endOfPaginationReached = true)
-        return  try {
+        pageIndex =
+            getPageIndex(loadType) ?: return MediatorResult.Success(endOfPaginationReached = true)
+        return try {
 
 
             val response = photosApi.getComments(

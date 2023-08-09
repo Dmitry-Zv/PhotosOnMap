@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_map"
     app:startDestination="@id/mapFragment">
 
@@ -11,10 +12,22 @@
         <action
             android:id="@+id/action_mapFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_cameraFragment2"
+            app:destination="@id/cameraFragment2" />
 
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
         android:name="by.zharikov.photosonmap.presentation.detail.DetailFragment"
-        android:label="DetailFragment" />
+        android:label="DetailFragment" >
+        <argument
+            android:name="photoArg"
+            app:argType="by.zharikov.photosonmap.domain.model.PhotoUi" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment2"
+        android:name="by.zharikov.photosonmap.presentation.camera.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
 </navigation>

@@ -19,5 +19,5 @@ data class User(
         val token: String = "",
         @SerializedName("userId")
         val userId: Int = 0
-    ):Parcelable
+    ) : Parcelable
 }

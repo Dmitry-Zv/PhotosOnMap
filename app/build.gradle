@@ -6,6 +6,7 @@ plugins {
     id 'kotlinx-serialization'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -116,6 +117,7 @@ dependencies {
     // Location Services
     def location_services = "21.0.1"
     implementation "com.google.android.gms:play-services-location:$location_services"
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
 
 

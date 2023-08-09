@@ -2,7 +2,6 @@ package by.zharikov.photosonmap.presentation.authorization.signup
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +64,6 @@ class SignUpFragment : Fragment() {
                 }
                 state.data != null -> {
 
-                    Log.d("STATE_DATA", state.data.toString())
                     with(binding) {
                         progressBar.visibility = View.GONE
                         loginEditText.text?.clear()

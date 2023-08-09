@@ -2,7 +2,6 @@ package by.zharikov.photosonmap.presentation.detail
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.zharikov.photosonmap.R
 import by.zharikov.photosonmap.adapter.CommentAdapter
 import by.zharikov.photosonmap.databinding.FragmentDetailBinding
 import by.zharikov.photosonmap.domain.model.PhotoUi
@@ -91,7 +91,6 @@ class DetailFragment : Fragment() {
                     showSnackBar(state.status.toString(), binding.root)
                 }
                 state.data != null -> {
-                    Log.d("COMMENT_DATA", state.data.toString())
                     binding.sendEditText.clearFocus()
                     inputMethodManager?.hideSoftInputFromWindow(binding.sendEditText.windowToken, 0)
                 }
@@ -148,7 +147,9 @@ class DetailFragment : Fragment() {
 
     private fun setupUi(photoUi: PhotoUi) {
         with(binding) {
-            Glide.with(root).load(photoUi.url).into(photoView)
+            Glide.with(root).load(photoUi.url)
+                .error(R.drawable.ic_no_image)
+                .into(photoView)
             dateText.text = photoUi.date
         }
     }

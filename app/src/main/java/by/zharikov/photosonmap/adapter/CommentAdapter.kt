@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import by.zharikov.photosonmap.databinding.ItemCommentBinding
 import by.zharikov.photosonmap.domain.model.CommentUi
-import by.zharikov.photosonmap.domain.model.PhotoUi
 
 class CommentAdapter :
     PagingDataAdapter<CommentUi, CommentAdapter.CommentViewHolder>(CommentDiffCallback()) {

@@ -8,14 +8,14 @@ import javax.inject.Inject
 class UploadComment @Inject constructor(private val repository: CommentRepository) {
 
     suspend operator fun invoke(text: String, token: String, imageId: Int): Resource<CommentDto> {
-       return try {
+        return try {
 
-           if (text.isBlank()) throw Exception("Text is empty.")
+            if (text.isBlank()) throw Exception("Text is empty.")
 
-           repository.uploadComment(text, token, imageId)
-       }catch (e:Exception){
-           Resource.Error(e)
-       }
+            repository.uploadComment(text, token, imageId)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
 
     }
 }

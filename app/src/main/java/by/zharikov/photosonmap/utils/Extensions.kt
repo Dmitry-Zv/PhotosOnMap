@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-//import java.util.*
 
 
 fun Fragment.showAlert(
@@ -63,14 +62,7 @@ fun Long.formatToData(timestamp: Long): String =
     SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(timestamp * 1000)
 
 
-fun Fragment.showSnackBarWithAction(msg: String, view: View, onClick:()->Unit) {
-    Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).apply {
-        setAction("Undo"){
-            onClick()
-        }
-    }
-        .show()
-}
+
 
 fun Fragment.showSnackBar(msg: String, view: View) {
     Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)

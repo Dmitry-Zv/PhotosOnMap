@@ -24,16 +24,14 @@ class PhotosRemoteMediator(
     private var pageIndex = 0
 
 
-
-
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, PhotoEntity>
     ): MediatorResult {
 
-        pageIndex = getPageIndex(loadType) ?:
-                return MediatorResult.Success(endOfPaginationReached = true)
-        return  try {
+        pageIndex =
+            getPageIndex(loadType) ?: return MediatorResult.Success(endOfPaginationReached = true)
+        return try {
 
 
             val response = photosApi.getPhotos(

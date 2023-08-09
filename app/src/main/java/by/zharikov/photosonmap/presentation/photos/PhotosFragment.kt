@@ -1,7 +1,6 @@
 package by.zharikov.photosonmap.presentation.photos
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,7 +78,6 @@ class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
 
     private fun collectToken() {
         collectLatestLifecycleFlow(sharedViewModel.userState) {
-            Log.d("USER_TOKEN", it)
             viewModel.onEvent(event = PhotosEvent.SetToken(it))
 
         }

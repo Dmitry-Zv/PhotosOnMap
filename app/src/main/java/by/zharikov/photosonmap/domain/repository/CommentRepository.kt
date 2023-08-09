@@ -2,7 +2,6 @@ package by.zharikov.photosonmap.domain.repository
 
 import androidx.paging.PagingData
 import by.zharikov.photosonmap.domain.model.CommentDto
-import by.zharikov.photosonmap.domain.model.CommentEntity
 import by.zharikov.photosonmap.domain.model.CommentUi
 import by.zharikov.photosonmap.domain.model.DeleteStatusDto
 import by.zharikov.photosonmap.utils.Resource
@@ -16,7 +15,7 @@ interface CommentRepository {
         imageId: Int
     ): Resource<CommentDto>
 
-    fun getPagedComment(token:String, imageId: Int): Flow<PagingData<CommentUi>>
+    fun getPagedComment(token: String, imageId: Int): Flow<PagingData<CommentUi>>
 
     suspend fun deleteComment(
         token: String,

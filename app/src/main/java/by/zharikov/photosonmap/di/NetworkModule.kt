@@ -1,17 +1,6 @@
 package by.zharikov.photosonmap.di
 
 import by.zharikov.photosonmap.data.network.PhotosApi
-import by.zharikov.photosonmap.domain.repository.AuthenticationRepository
-import by.zharikov.photosonmap.domain.repository.CommentRepository
-import by.zharikov.photosonmap.domain.repository.PhotosRepository
-import by.zharikov.photosonmap.domain.usecase.authentication.AuthenticationUseCases
-import by.zharikov.photosonmap.domain.usecase.authentication.SignIn
-import by.zharikov.photosonmap.domain.usecase.authentication.SignUp
-import by.zharikov.photosonmap.domain.usecase.comment.CommentUseCases
-import by.zharikov.photosonmap.domain.usecase.comment.UploadComment
-import by.zharikov.photosonmap.domain.usecase.photos.DeletePhoto
-import by.zharikov.photosonmap.domain.usecase.photos.GetPhotos
-import by.zharikov.photosonmap.domain.usecase.photos.PhotosUseCases
 import by.zharikov.photosonmap.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -55,8 +44,6 @@ object NetworkModule {
     @Singleton
     fun providePhotosApi(retrofit: Retrofit): PhotosApi =
         retrofit.create(PhotosApi::class.java)
-
-
 
 
 }
