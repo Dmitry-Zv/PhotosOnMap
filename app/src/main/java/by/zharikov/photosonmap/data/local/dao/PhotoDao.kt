@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import by.zharikov.photosonmap.domain.model.CommentEntity
 import by.zharikov.photosonmap.domain.model.PhotoEntity
 
 @Dao
@@ -13,7 +14,11 @@ interface PhotoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPhotos(photos: List<PhotoEntity>)
 
-    @Query("SELECT * FROM photo_table")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addPhoto(photoEntity: PhotoEntity)
+
+
+    @Query("SELECT * FROM photo_table ORDER BY date_time DESC")
     fun getAllPhotos(): PagingSource<Int, PhotoEntity>
 
     @Query("DELETE FROM photo_table")

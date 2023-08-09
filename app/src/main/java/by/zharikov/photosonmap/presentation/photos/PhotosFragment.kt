@@ -48,8 +48,15 @@ class PhotosFragment : Fragment(), DeletePhotoListener, PhotoClickListener {
         collectToken()
         collectPagingData()
         collectDeleteState()
+        takePhoto()
 
 
+    }
+
+    private fun takePhoto() {
+        binding.fab.setOnClickListener {
+            view?.findNavController()?.navigate(R.id.action_photosFragment_to_cameraFragment)
+        }
     }
 
     private fun collectDeleteState() {

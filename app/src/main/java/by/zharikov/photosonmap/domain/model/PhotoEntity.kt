@@ -8,6 +8,7 @@ import by.zharikov.photosonmap.utils.Constants
 
 @Entity(tableName = Constants.PHOTO_TABLE)
 data class PhotoEntity(
+    @ColumnInfo(name = "date_time")
     val date: Long,
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "photo_id")
@@ -17,7 +18,7 @@ data class PhotoEntity(
     val url: String
 ) {
     companion object {
-        fun toPhotoEntity(data: PhotoDto.Data) =
+        fun toPhotoEntity(data: Photo) =
             PhotoEntity(
                 date = data.date,
                 id = data.id,

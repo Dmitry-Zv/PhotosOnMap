@@ -51,7 +51,7 @@ class CommentRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedComment(token: String, imageId: Int): Flow<PagingData<CommentUi>> {
-        val pagingSourceFactory = { commentDao.getAllComments() }
+        val pagingSourceFactory = { commentDao.getAllComments(photoId = imageId) }
         return Pager(
             config = PagingConfig(
                 pageSize = Constants.PAGE_SIZE,
@@ -71,7 +71,6 @@ class CommentRepositoryImpl @Inject constructor(
     }
 
 
-
     override suspend fun deleteComment(
         token: String,
         imageId: Int,
@@ -79,7 +78,11 @@ class CommentRepositoryImpl @Inject constructor(
     ): Resource<DeleteStatusDto> {
         return try {
             val response =
-                photosApi.deleteComment(headers = mapOf(ACCESS_TOKEN to token), imageId = imageId, commentId = commentId)
+                photosApi.deleteComment(
+                    headers = mapOf(ACCESS_TOKEN to token),
+                    imageId = imageId,
+                    commentId = commentId
+                )
             if (response.isSuccessful) {
                 val deleteStatusDto = checkNotNull(response.body())
                 commentDao.deleteCommentById(commentId = commentId)
