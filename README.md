@@ -8,7 +8,7 @@ The fifth screen is  the Detailed screen which contains the image of photo, the 
 To delete a comment, swipe the comment element to the left.
 Screens:
 ![login](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/69d5be68-9e61-4f65-83b7-175daa8fe6d9)
-![register](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/ce8f14a7-59cb-4d6a-b7a6-61f8d38712ac)
+![regiser](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/1471691b-836e-4dca-a722-8cfcc6b7ec02)
 ![photos](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/cd8b1531-a0f5-410a-9660-fb133f0a8efb)
 ![delete_photo](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/95661420-ce2d-4de1-af07-e09e1902a36d)
 ![navigation_drawer](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/ecc9032d-3461-4bf5-a2a3-9f68d200de45)
