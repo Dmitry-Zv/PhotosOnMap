@@ -3,7 +3,9 @@ package by.zharikov.photosonmap.presentation.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +21,7 @@ import by.zharikov.photosonmap.domain.model.PhotoUi
 import by.zharikov.photosonmap.utils.Constants.PHOTO_ARG
 import by.zharikov.photosonmap.utils.collectLatestLifecycleFlow
 import by.zharikov.photosonmap.utils.showSnackBar
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -45,6 +46,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+    @SuppressLint("MissingPermission")
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -58,7 +60,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             performMinskLocation()
 
         } else {
-            performCurrentLocation()
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = true
+
         }
 
     }
@@ -70,6 +74,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val viewModel: MapViewModel by viewModels()
 
+    private val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+        .setWaitForAccurateLocation(false)
+        .setMinUpdateIntervalMillis(5000)
+        .build()
+
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            super.onLocationResult(result)
+            val location = result.lastLocation
+            performCurrentLocation(location)
+        }
+    }
 
     private fun allPermissionGranted() = PERMISSION.all {
         ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
@@ -93,6 +110,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+
         mapFragment.getMapAsync(this)
 
         collectState()
@@ -108,14 +127,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
         if (allPermissionGranted()) {
-            performCurrentLocation()
+
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = true
+
         } else {
             requestAllPermissions()
         }
+
+        viewModel.onEvent(event = MapEvent.GetAllPhotos)
+        setMarkersClickListener()
 
 
     }
@@ -131,18 +157,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     @SuppressLint("MissingPermission")
-    private fun performCurrentLocation() {
-        fusedLocationClient.lastLocation.addOnSuccessListener {
-            val latitude = it.latitude
-            val longitude = it.longitude
+    private fun performCurrentLocation(location: Location?) {
+
+        if (location != null) {
             viewModel.onEvent(
                 event = MapEvent.PerformCurrentLocation(
-                    latitude = latitude,
-                    longitude = longitude
+                    latitude = location.latitude,
+                    longitude = location.longitude
                 )
             )
-
         }
+
+
     }
 
     private fun collectState() {
@@ -157,8 +183,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpMap(location: LatLng) {
-        viewModel.onEvent(event = MapEvent.GetAllPhotos)
-        setMarkersClickListener()
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
     }
 
@@ -195,6 +220,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+
+    @SuppressLint("MissingPermission")
+    override fun onResume() {
+        super.onResume()
+        if (allPermissionGranted()) fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

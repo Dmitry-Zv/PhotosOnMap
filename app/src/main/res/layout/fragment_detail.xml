@@ -16,9 +16,11 @@
     <TextView
         android:id="@+id/date_text"
         android:layout_width="match_parent"
-        android:textSize="24sp"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:background="?attr/colorButtonNormal"
         android:gravity="center"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="0.5" />
 
     <androidx.recyclerview.widget.RecyclerView
