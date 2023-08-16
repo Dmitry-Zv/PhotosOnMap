@@ -12,8 +12,9 @@ Screens:
 ![photos](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/cd8b1531-a0f5-410a-9660-fb133f0a8efb)
 ![delete_photo](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/95661420-ce2d-4de1-af07-e09e1902a36d)
 ![navigation_drawer](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/ecc9032d-3461-4bf5-a2a3-9f68d200de45)
-![google_maps](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/f53f2b74-84ca-4f8f-9615-bb78df961407)
-![google_maps2](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/e8ad231b-c077-413b-86c4-cba5dd5b61c0)
+![google_map](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/e950e26e-2de3-481a-8c16-b5896d806904)
+![google_map2](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/cba186fb-4dc6-42ee-99b0-414fee10586e)
+![sign_out](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/59d5522a-57da-4dbe-929f-7cbdbda69b30)
 ![camera](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/aaedb9d2-f1a8-4473-9d8f-800795bcc203)
 ![detailed](https://github.com/Dmitry-Zv/PhotosOnMap/assets/70663257/ac96c51f-792b-4f57-aaf6-2e40d19f41a7)
 
