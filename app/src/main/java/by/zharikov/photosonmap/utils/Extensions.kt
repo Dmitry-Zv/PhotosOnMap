@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.core.content.ContextCompat
@@ -28,7 +29,7 @@ import java.util.*
 fun Fragment.showAlert(
     title: Int,
     message: Int,
-    positiveButtonResId: Int = R.string.positive_button,
+    positiveButtonResId: Int = R.string.button_yes,
     negativeButtonResId: Int = R.string.negative_button,
     positiveButtonFun: () -> Unit,
     negativeButtonFun: () -> Unit
@@ -52,9 +53,44 @@ fun Fragment.showAlert(
 }
 
 
+fun AppCompatActivity.showAlert(
+    title: Int,
+    message: Int,
+    positiveButtonResId: Int = R.string.button_yes,
+    negativeButtonResId: Int = R.string.negative_button,
+    positiveButtonFun: () -> Unit,
+    negativeButtonFun: () -> Unit
+) {
+    MaterialAlertDialogBuilder(this)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(
+            positiveButtonResId
+        ) { dialog, _ ->
+            positiveButtonFun()
+            dialog?.dismiss()
+        }
+        .setNegativeButton(
+            negativeButtonResId
+        ) { dialog, _ ->
+            negativeButtonFun()
+            dialog?.dismiss()
+        }
+        .show()
+}
+
+
 fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collectLatest(collect)
+        }
+    }
+}
+
+fun <T> AppCompatActivity.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collectLatest(collect)
         }
     }

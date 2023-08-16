@@ -1,26 +1,49 @@
 package by.zharikov.photosonmap.presentation.authorization
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import by.zharikov.photosonmap.adapter.PagerAuthAdapter
 import by.zharikov.photosonmap.databinding.ActivityAuthorizationBinding
-import by.zharikov.photosonmap.presentation.authorization.signup.SignUpClickListener
+import by.zharikov.photosonmap.presentation.MainActivity
+import by.zharikov.photosonmap.utils.Constants
+import by.zharikov.photosonmap.utils.collectLatestLifecycleFlow
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AuthorizationActivity : AppCompatActivity(), SignUpClickListener {
+class AuthorizationActivity : AppCompatActivity() {
 
     private var _binding: ActivityAuthorizationBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel:AuthorizationViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityAuthorizationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        collectState()
         setUpViewPager()
         setUpTabLayout()
+    }
+
+    private fun collectState() {
+        collectLatestLifecycleFlow(viewModel.state){state->
+            Log.d("AUTH_STATE", state.toString())
+            when{
+                state.user !=null -> {
+                    Intent(this, MainActivity::class.java).apply {
+                        putExtra(Constants.DATA_KEY, state.user)
+                        startActivity(this)
+                    }
+                    finish()
+                }
+            }
+        }
     }
 
     private fun setUpTabLayout() {
@@ -50,7 +73,5 @@ class AuthorizationActivity : AppCompatActivity(), SignUpClickListener {
         _binding = null
     }
 
-    override fun onSignUpClickListener() {
-        binding.viewPager.currentItem = 0
-    }
+
 }

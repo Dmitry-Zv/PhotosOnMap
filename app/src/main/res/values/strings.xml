@@ -26,4 +26,7 @@
     <string name="delete_photo">Delete photo</string>
     <string name="message_delete_photo">Delete photo?</string>
     <string name="take_photo">Take Photo</string>
+    <string name="sign_out">Sign out</string>
+    <string name="button_yes">Yes</string>
+    <string name="approve_sign_out">Do you really want to sign out?</string>
 </resources>

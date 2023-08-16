@@ -1,6 +1,6 @@
 package by.zharikov.photosonmap.presentation.authorization.signup
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.zharikov.photosonmap.databinding.FragmentSignupBinding
+import by.zharikov.photosonmap.presentation.MainActivity
+import by.zharikov.photosonmap.utils.Constants
 import by.zharikov.photosonmap.utils.collectLatestLifecycleFlow
 import by.zharikov.photosonmap.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,12 +21,7 @@ class SignUpFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SignUpViewModel by viewModels()
-    private lateinit var signUpClickListener: SignUpClickListener
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        signUpClickListener = context as SignUpClickListener
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +67,11 @@ class SignUpFragment : Fragment() {
                         passwordEditText.text?.clear()
                         repeatPasswordEditText.text?.clear()
                     }
-                    signUpClickListener.onSignUpClickListener()
+                    Intent(requireContext(), MainActivity::class.java).apply {
+                        putExtra(Constants.DATA_KEY, state.data.data)
+                        startActivity(this)
+                    }
+                    requireActivity().finish()
                 }
             }
         }

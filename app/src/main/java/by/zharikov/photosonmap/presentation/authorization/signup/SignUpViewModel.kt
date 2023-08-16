@@ -3,6 +3,7 @@ package by.zharikov.photosonmap.presentation.authorization.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.zharikov.photosonmap.domain.model.User
+import by.zharikov.photosonmap.domain.repository.SharedPreferencesUserRepository
 import by.zharikov.photosonmap.domain.usecase.authentication.AuthenticationUseCases
 import by.zharikov.photosonmap.presentation.common.Event
 import by.zharikov.photosonmap.utils.Resource
@@ -44,7 +45,10 @@ class SignUpViewModel @Inject constructor(
                 is Resource.Error -> showError(
                     msgError = result.exception.message ?: "Unknown error"
                 )
-                is Resource.Success -> showSuccess(data = result.data)
+                is Resource.Success -> {
+                    authenticationUseCases.saveUser(user = result.data.data)
+                    showSuccess(data = result.data)
+                }
             }
 
         }
@@ -52,6 +56,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun showSuccess(data: User) {
+
         _state.value = _state.value.copy(
             isLoading = false,
             data = data

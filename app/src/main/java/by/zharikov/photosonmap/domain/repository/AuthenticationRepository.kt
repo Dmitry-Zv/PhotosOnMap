@@ -10,4 +10,7 @@ interface AuthenticationRepository {
     suspend fun signIn(login: String, password: String): Resource<User>
 
 
+    suspend fun signOut()
+
+
 }

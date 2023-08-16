@@ -1,12 +1,7 @@
 package by.zharikov.photosonmap.di
 
-import by.zharikov.photosonmap.domain.repository.AuthenticationRepository
-import by.zharikov.photosonmap.domain.repository.CommentRepository
-import by.zharikov.photosonmap.domain.repository.MapRepository
-import by.zharikov.photosonmap.domain.repository.PhotosRepository
-import by.zharikov.photosonmap.domain.usecase.authentication.AuthenticationUseCases
-import by.zharikov.photosonmap.domain.usecase.authentication.SignIn
-import by.zharikov.photosonmap.domain.usecase.authentication.SignUp
+import by.zharikov.photosonmap.domain.repository.*
+import by.zharikov.photosonmap.domain.usecase.authentication.*
 import by.zharikov.photosonmap.domain.usecase.comment.CommentUseCases
 import by.zharikov.photosonmap.domain.usecase.comment.DeleteComments
 import by.zharikov.photosonmap.domain.usecase.comment.GetComments
@@ -30,10 +25,16 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticationUseCases(repository: AuthenticationRepository): AuthenticationUseCases =
+    fun provideAuthenticationUseCases(
+        repository: AuthenticationRepository,
+        sharedPreferencesUserRepository: SharedPreferencesUserRepository
+    ): AuthenticationUseCases =
         AuthenticationUseCases(
             signIn = SignIn(repository),
-            signUp = SignUp(repository)
+            signUp = SignUp(repository),
+            getUser = GetUser(sharedPreferencesUserRepository),
+            saveUser = SaveUser(sharedPreferencesUserRepository),
+            signOut = SignOut(sharedPreferencesUserRepository, repository)
         )
 
     @Provides

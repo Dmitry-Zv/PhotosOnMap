@@ -11,6 +11,7 @@ data class User(
     @SerializedName("status")
     val status: Int = 0
 ) {
+    @kotlinx.serialization.Serializable
     @Parcelize
     data class Data(
         @SerializedName("login")

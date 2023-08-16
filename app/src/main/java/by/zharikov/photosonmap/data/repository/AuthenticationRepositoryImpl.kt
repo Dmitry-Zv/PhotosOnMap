@@ -1,5 +1,7 @@
 package by.zharikov.photosonmap.data.repository
 
+import by.zharikov.photosonmap.data.local.dao.CommentDao
+import by.zharikov.photosonmap.data.local.dao.PhotoDao
 import by.zharikov.photosonmap.data.network.PhotosApi
 import by.zharikov.photosonmap.domain.model.PostAuthentication
 import by.zharikov.photosonmap.domain.model.User
@@ -9,7 +11,9 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
-    private val photosApi: PhotosApi
+    private val photosApi: PhotosApi,
+    private val photoDao: PhotoDao,
+    private val commentDao: CommentDao
 ) : AuthenticationRepository {
 
     override suspend fun signUp(login: String, password: String): Resource<User> {
@@ -41,4 +45,11 @@ class AuthenticationRepositoryImpl @Inject constructor(
             Resource.Error(exception = e)
         }
     }
+
+    override suspend fun signOut() {
+        commentDao.deleteAllCommentsInDb()
+        photoDao.deleteAllPhotos()
+    }
+
+
 }
