@@ -5,7 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,21 +13,25 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import by.zharikov.photosonmap.R
 import by.zharikov.photosonmap.databinding.FragmentMapBinding
 import by.zharikov.photosonmap.domain.model.PhotoUi
+import by.zharikov.photosonmap.presentation.SharedViewModel
+import by.zharikov.photosonmap.presentation.map.cluster.ClusterBottomSheetFragment
 import by.zharikov.photosonmap.utils.Constants.PHOTO_ARG
 import by.zharikov.photosonmap.utils.collectLatestLifecycleFlow
 import by.zharikov.photosonmap.utils.showSnackBar
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.clustering.ClusterManager
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -62,6 +66,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } else {
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                performCurrentLocation(location = it)
+            }
 
         }
 
@@ -73,20 +80,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val viewModel: MapViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var clusterManager: ClusterManager<PhotoUi>
 
-    private val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-        .setWaitForAccurateLocation(false)
-        .setMinUpdateIntervalMillis(5000)
-        .build()
-
-
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(result: LocationResult) {
-            super.onLocationResult(result)
-            val location = result.lastLocation
-            performCurrentLocation(location)
-        }
-    }
 
     private fun allPermissionGranted() = PERMISSION.all {
         ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
@@ -111,13 +107,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-
+        Log.d("CLUSTER", "onViewCreated")
         mapFragment.getMapAsync(this)
 
         collectState()
-
+        collectPhotoUi()
         takePhoto()
 
+    }
+
+    private fun collectPhotoUi() {
+        collectLatestLifecycleFlow(sharedViewModel.photoUi) { photoUi ->
+            if (photoUi == PhotoUi()) return@collectLatestLifecycleFlow
+            else goToThePhotoFragment(photoUi = photoUi)
+        }
     }
 
     private fun takePhoto() {
@@ -127,21 +130,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        clusterManager = ClusterManager(requireContext(), mMap)
+        mMap.setOnMarkerClickListener(clusterManager)
+        mMap.setOnCameraIdleListener(clusterManager)
+        setMarkersClickListener()
+        viewModel.onEvent(event = MapEvent.GetAllPhotos)
 
         if (allPermissionGranted()) {
 
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                performCurrentLocation(location = it)
+            }
 
         } else {
             requestAllPermissions()
         }
-
-        viewModel.onEvent(event = MapEvent.GetAllPhotos)
-        setMarkersClickListener()
 
 
     }
@@ -159,14 +167,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun performCurrentLocation(location: Location?) {
 
-        if (location != null) {
+        if (location != null)
             viewModel.onEvent(
                 event = MapEvent.PerformCurrentLocation(
                     latitude = location.latitude,
                     longitude = location.longitude
                 )
             )
-        }
 
 
     }
@@ -183,60 +190,47 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpMap(location: LatLng) {
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-    }
-
-    private fun setMarkersClickListener() {
-        mMap.setOnMarkerClickListener {
-
-            val id = it.tag as? Int
-
-            if (id != null) {
-                viewModel.onEvent(event = MapEvent.GetPhotoById(id = id))
-            } else {
-                viewModel.onEvent(event = MapEvent.ShowError(Exception("Problem to cast tag to Int")))
-            }
-            true
+        if (::mMap.isInitialized) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
         }
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
+    private fun setMarkersClickListener() {
+        clusterManager.setOnClusterItemClickListener {
 
-    private fun goToThePhotoFragment(photoUi: PhotoUi) {
-        val bundle = bundleOf(PHOTO_ARG to photoUi)
-        view?.findNavController()?.navigate(R.id.action_mapFragment_to_detailFragment, bundle)
+            goToThePhotoFragment(it)
+
+            true
+        }
+
+        clusterManager.setOnClusterClickListener {
+            ClusterBottomSheetFragment().show(childFragmentManager, "bottom_sheet_tag")
+            sharedViewModel.setListOfPhotoUi(it.items.toList())
+            true
+        }
+
+    }
+
+
+    private fun goToThePhotoFragment(photoUi: PhotoUi?) {
+        photoUi?.let {
+            val bundle = bundleOf(PHOTO_ARG to photoUi)
+            view?.findNavController()?.navigate(R.id.action_mapFragment_to_detailFragment, bundle)
+
+        } ?: viewModel.onEvent(event = MapEvent.ShowError(Exception("PhotoUi is null")))
+        sharedViewModel.setPhotoUi(photoUi = PhotoUi())
     }
 
     private fun setMarkers(listOfPhotoUi: List<PhotoUi>) {
-        listOfPhotoUi.forEach { photoUi ->
-
-
-            val coordinate = LatLng(photoUi.lat, photoUi.lng)
-
-            val marker = mMap.addMarker(
-                MarkerOptions().position(coordinate)
-            )
-            marker?.tag = photoUi.id
-        }
-    }
-
-
-    @SuppressLint("MissingPermission")
-    override fun onResume() {
-        super.onResume()
-        if (allPermissionGranted()) fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
-    }
-
-    override fun onPause() {
-        super.onPause()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+        clusterManager.addItems(listOfPhotoUi)
+        clusterManager.cluster()
     }
 
     override fun onDestroyView() {
+        Log.d("CLUSTER", "onDestroy")
+        clusterManager.clearItems()
+        mMap.clear()
         super.onDestroyView()
         _binding = null
     }
