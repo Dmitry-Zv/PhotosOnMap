@@ -37,7 +37,10 @@ class LoginViewModel @Inject constructor(
                 is Resource.Error -> showError(
                     msgError = result.exception.message ?: "Unknown error"
                 )
-                is Resource.Success -> showSuccess(data = result.data)
+                is Resource.Success ->{
+                    authenticationUseCases.saveUser(user = result.data.data)
+                    showSuccess(data = result.data)
+                }
             }
         }
         performDefault()

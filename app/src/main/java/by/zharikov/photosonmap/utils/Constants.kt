@@ -9,4 +9,6 @@ object Constants {
     const val PAGE_SIZE = 20
     const val PHOTO_ARG = "photoArg"
     const val COMMENT_TABLE = "comment_table"
+    const val SHARED_PREFERENCES_USER = "shared_preferences_user"
+    const val SHARED_PREFERENCES_USER_TOKEN = "shared_preferences_user_token"
 }

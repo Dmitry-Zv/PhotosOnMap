@@ -1,13 +1,7 @@
 package by.zharikov.photosonmap.di
 
-import by.zharikov.photosonmap.data.repository.AuthenticationRepositoryImpl
-import by.zharikov.photosonmap.data.repository.CommentRepositoryImpl
-import by.zharikov.photosonmap.data.repository.MapRepositoryImpl
-import by.zharikov.photosonmap.data.repository.PhotosRepositoryImpl
-import by.zharikov.photosonmap.domain.repository.AuthenticationRepository
-import by.zharikov.photosonmap.domain.repository.CommentRepository
-import by.zharikov.photosonmap.domain.repository.MapRepository
-import by.zharikov.photosonmap.domain.repository.PhotosRepository
+import by.zharikov.photosonmap.data.repository.*
+import by.zharikov.photosonmap.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +27,10 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindMapRepositoryImpl_toMapRepository(mpRepositoryImpl: MapRepositoryImpl): MapRepository
+
+    @Binds
+    @Singleton
+    fun bindSharedPreferencesUserRepositoryImpl_toSharedPreferencesUserRepository(
+        sharedPreferencesUserRepositoryImpl: SharedPreferencesUserRepositoryImpl
+    ): SharedPreferencesUserRepository
 }
